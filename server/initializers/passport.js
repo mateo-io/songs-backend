@@ -3,6 +3,7 @@
 const passport = require('passport');
 const jwt = require('jwt-simple');
 const LocalStrategy = require('passport-local').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
 
 const User = require('../models').User;
@@ -48,6 +49,18 @@ passport.use(new LocalStrategy({
     })
     .catch(done);
 }));
+
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+},
+function(token, tokenSecret, profile, cb) {
+  User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+    return cb(err, user);
+  });
+}
+));
 
 
 

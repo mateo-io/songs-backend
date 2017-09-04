@@ -8,4 +8,9 @@ module.exports = (app) => {
   app.post('/api/user', userController.create);
   app.get('/api/user', userController.list);
   app.post('/api/user/login', userController.login);
+
+  //TWITTER
+app.get('/auth/twitter', userController.twitter);
+app.get('/auth/twitter/callback', userController.twitterCallback);
+
 };

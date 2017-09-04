@@ -21,6 +21,12 @@ Start the server
 npm run start
 ```
 
+Start migrations
+```
+sequelize db:migrate
+```
+
+
 ## Based on this tutorial
 
 https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize

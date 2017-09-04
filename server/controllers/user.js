@@ -32,8 +32,14 @@ module.exports = {
       res.status(200).send({ token });
     },
   ]),
-
-
+  twitter: passport.authenticate('twitter'),
+  twitterCallback: compose([
+    passport.authenticate('twitter', { failureRedirect: '/login' }),
+    (token, tokenSecret, profile, done) => {
+      console.log(token, tokenSecret, profile);
+      res.redirect('/');
+    }
+  ]), 
   create(req, res) {
     const { name, email, password, isAdmin } = req.body;
     return User

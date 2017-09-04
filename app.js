@@ -2,6 +2,13 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const session = require('express-session');
+
+// TODO configure sess
+const sess = { secret: 'keyboard cat',
+cookie: {}
+}
+require('dotenv').config();
 require('./server/initializers/passport');
 require('./server/config/config.js');
 
@@ -14,6 +21,7 @@ app.use(logger('dev'));
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session(sess));
 app.use(passport.initialize());
 
 // Require our routes into the application.
