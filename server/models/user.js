@@ -13,10 +13,12 @@ function hashPassword(user) {
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    name: { type: DataTypes.STRING, allowNull: false, unique: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true },
-    isAdmin: { type: DataTypes.STRING, allowNull: false, unique: true, default: false },
-    password: { type: DataTypes.STRING, allowNull: false },
+    name: { type: DataTypes.STRING, allowNull: true, unique: false },
+    email: { type: DataTypes.STRING, allowNull: true, unique: true },
+    isAdmin: { type: DataTypes.STRING, allowNull: true, unique: true, default: false },
+    providerId: { type: DataTypes.STRING, allowNull: true, unique: true },
+    provider: { type: DataTypes.STRING, allowNull: true, unique: true },
+    password: { type: DataTypes.STRING, allowNull: true },
   }, {
     hooks: {
       beforeCreate: hashPassword,
@@ -25,7 +27,11 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.prototype.isValidPassword = function(password) {
-        return bcrypt.compareSync(password, this.password);
+    if(password) {
+      return bcrypt.compareSync(password, this.password);
+    } else {
+      return true;
+    }
   }
 
   return User;

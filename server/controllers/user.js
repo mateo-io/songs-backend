@@ -1,5 +1,4 @@
 const User = require('../models').User;
-
 const jwt = require('jwt-simple');
 const passport = require('passport');
 const { compose } = require('compose-middleware');
@@ -10,6 +9,7 @@ const {
 } = require('../config/config.js');
 
 
+const RedisStore = require('connect-redis');
 module.exports = {
   /*
   login:
@@ -35,9 +35,13 @@ module.exports = {
   twitter: passport.authenticate('twitter'),
   twitterCallback: compose([
     passport.authenticate('twitter', { failureRedirect: '/login' }),
-    (token, tokenSecret, profile, done) => {
-      console.log(token, tokenSecret, profile);
-      res.redirect('/');
+    (req, res) => {
+      console.log("REQUEST", req);
+      res.status(200).send({
+        user: req.user,
+        sessionId: req.sessionID,
+        session: req.session
+      });
     }
   ]), 
   create(req, res) {
