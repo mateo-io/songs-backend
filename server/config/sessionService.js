@@ -5,38 +5,17 @@ var self = module.exports = {
     initializeRedis: function (client, store) {
         redisClient = client;
         redisStore = store;
-        console.log("initialized");
-        console.log("client", redisClient);
-        console.log("store", redisStore);
     },
-    getSessionId: function (handshake) {
-        return handshake.signedCookies['the pig is in the bath'];
-    },
-    get: function (handshake, callback) {
-        var sessionId = self.getSessionId(handshake);
-
-        self.getSessionBySessionID(sessionId, function (err, session) {
-            if (err) callback(err);
-            if (callback != undefined)
-                callback(null, session);
+    getSessionBySessionID: (sessionId) => new Promise((resolve, reject) => {
+        return redisStore.load(sessionId, function (err, session) {
+            if (err) {
+               reject(err);
+               console.log("REJECTED")
+            }
+            resolve(session);
         });
-    },
-    getSessionBySessionID: function (sessionId, callback) {
-        redisStore.load(sessionId, function (err, session) {
-            if (err) callback(err);
-            if (callback != undefined)
-                callback(null, session);
-        });
-    },
-    getUserName: function (handshake, callback) {
-        self.get(handshake, function (err, session) {
-            if (err) callback(err);
-            if (session)
-                callback(null, session.userName);
-            else
-                callback(null);
-        });
-    },
+    }),
+    // TODO CONVERT FROM CALLBACK TO PROMISE
     updateSession: function (session, callback) {
         try {
             session.reload(function () {

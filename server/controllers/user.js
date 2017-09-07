@@ -11,16 +11,6 @@ const {
 const sessionService = require('../config/sessionService.js');
 
 module.exports = {
-  /*
-  login:
-  passport.authenticate('local', {session: false}),
-  function(req, res) {
-    console.log("im in login");
-    res.send({message: 'hello'});
-    //res.redirect('/users/' + req.user.username);
-  },
-  */
-
   login: compose([
     passport.authenticate('local'),
     (req, res) => {
@@ -32,23 +22,6 @@ module.exports = {
       res.status(200).send({ token });
     },
   ]),
-  twitter: passport.authenticate('twitter'),
-  twitterCallback: compose([
-    passport.authenticate('twitter', { failureRedirect: '/login' }),
-    (req, res) => {
-      sessionService.getSessionBySessionID(req.sessionID,
-        (err, session) => {
-          console.log("SESSION");
-          res.status(200).send({
-            user: req.user,
-            sessionId: req.sessionID,
-            store: session
-          });
-
-        })
-
-    }
-  ]), 
   create(req, res) {
     const { name, email, password, isAdmin } = req.body;
     return User
@@ -64,4 +37,17 @@ module.exports = {
       .then(users => res.status(200).send(users))
       .catch(error => res.status(400).send(error));
   },
+  twitter: passport.authenticate('twitter'),
+  twitterCallback: compose([
+    passport.authenticate('twitter', { failureRedirect: '/login' }),
+    async(req, res) => {
+      const session = await sessionService.getSessionBySessionID(req.sessionID)
+
+      res.status(200).send({
+        user: req.user,
+        oauth: session['oauth:twitter']
+      });
+
+    }
+  ]), 
 };
