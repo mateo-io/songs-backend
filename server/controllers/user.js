@@ -8,8 +8,8 @@ const {
   TOKEN_EXPIRATION_TIME,
 } = require('../config/config.js');
 
+const sessionService = require('../config/sessionService.js');
 
-const RedisStore = require('connect-redis');
 module.exports = {
   /*
   login:
@@ -36,12 +36,17 @@ module.exports = {
   twitterCallback: compose([
     passport.authenticate('twitter', { failureRedirect: '/login' }),
     (req, res) => {
-      console.log("REQUEST", req);
-      res.status(200).send({
-        user: req.user,
-        sessionId: req.sessionID,
-        session: req.session
-      });
+      sessionService.getSessionBySessionID(req.sessionID,
+        (err, session) => {
+          console.log("SESSION");
+          res.status(200).send({
+            user: req.user,
+            sessionId: req.sessionID,
+            store: session
+          });
+
+        })
+
     }
   ]), 
   create(req, res) {

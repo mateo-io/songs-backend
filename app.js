@@ -1,11 +1,13 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const session = require('express-session');
+const redis = require('redis');
+const redisClient = redis.createClient();
 const RedisStore = require('connect-redis')(session);
-
-
+const redisStore = new RedisStore({ client: redisClient });
 
 
 
@@ -17,7 +19,9 @@ const sessionConfig = {
   secret: 'the pig is on the bath',
   key: 'sid',
   cookie: { secure: false },
-  store: new RedisStore()
+  resave: true,
+  saveUninitialized: true,
+  store: redisStore
 }
 
 // Set up the express app
@@ -32,7 +36,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.set('trust proxy', 1);
 // TODO secure cookie in production? 
+app.use(cookieParser('the pig is on the bath'));
 app.use(session(sessionConfig));
+
+// STORE
+const sessionService = require('./server/config/sessionService.js');
+sessionService.initializeRedis(redisClient, redisStore);
+
 
 
 // Require our routes into the application.
