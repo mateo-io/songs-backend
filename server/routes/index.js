@@ -1,5 +1,5 @@
 const user = require("../controllers").user;
-const twitter = require("../controllers").twitter;
+// const twitter = require("../controllers").twitter;
 const scrape = require("../controllers").scrape;
 
 module.exports = app => {
@@ -13,13 +13,16 @@ module.exports = app => {
   app.get("/api/user", user.list);
   app.post("/api/user/login", user.login);
 
+  // SCRAPER
+  app.post("/api/scrape", scrape.run);
+
+  /*
   //TWITTER
   app.get("/auth/twitter", user.twitter);
   app.get("/auth/twitter/callback", user.twitterCallback);
 
   //TWITTER API
   app.get("/api/twitter/thread/:id", twitter.getThreadFromTweetId);
+  */
 
-  // SCRAPER
-  app.post("/api/scrape", scrape.run);
 };

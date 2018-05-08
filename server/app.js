@@ -12,8 +12,8 @@ const cors = require("cors");
 
 // TODO configure sess
 require("dotenv").config();
-require("./server/initializers/passport");
-require("./server/config/config.js");
+require("./initializers/passport");
+require("./config/config.js");
 const sessionConfig = {
   secret: "the pig is on the bath",
   key: "sid",
@@ -39,13 +39,13 @@ app.use(cookieParser("the pig is on the bath"));
 app.use(session(sessionConfig));
 
 // STORE
-const sessionService = require("./server/config/sessionService.js");
+const sessionService = require("./config/sessionService.js");
 sessionService.initializeRedis(redisClient, redisStore);
 
 app.use(cors());
 
 // Require our routes into the application.
-require("./server/routes")(app);
+require("./routes")(app);
 
 app.get("*", (req, res) =>
   res.status(200).send({
