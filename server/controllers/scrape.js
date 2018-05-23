@@ -20,9 +20,11 @@ const getLyricsUrl = async page => {
           return document.querySelector(sel).getAttribute("href");
         }, selector)
         .then(link => {
+          // check if the link is real
           if (link.slice(0, 5) === "https") {
             return link;
           } else {
+            // if link is blank return nothing
             return "";
           }
         });

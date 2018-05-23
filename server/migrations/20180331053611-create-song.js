@@ -14,6 +14,13 @@ module.exports = {
       language: {
         type: Sequelize.STRING
       },
+      artistId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Artists",
+          key: "id"
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

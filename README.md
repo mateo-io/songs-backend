@@ -14,19 +14,21 @@ outdated.
 
 ## Development
 
-Copy test env files
+| Copy test env files
 
 ```
 cp .env.development.example .env.development
 cp .env.test.example .env.test
 ```
 
-Set up DB
+| Set up DB
+
+psql into database. Password should be blank or postgres.
+`psql -U postgres`
 
 ```
-createuser fun
-createdb fun
-createdb fun_test
+CREATE USER fun WITH PASSWORD '123456';
+CREATE DATABASE fun;
 ```
 
 * Clone the repo
