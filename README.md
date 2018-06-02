@@ -1,9 +1,10 @@
 # EXPRESS BACKEND
 
 ```
-Postgresql
-passport
 Express
+Postgresql
+Passport
+Docker
 ```
 
 # Beginners Friendly Node.js API
@@ -53,12 +54,13 @@ Get into postgres shell
 
 [Basic Node.js](https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize)
 [Sequelize basics](http://docs.sequelizejs.com/manual/tutorial/migrations.html)
+[Sequelize important](https://codeburst.io/sequelize-migrations-setting-up-associations-985d29b61ee7)
 
 ## Features
 
 * Token based Authentication through passport
 * Database management with Sequelize
-* No callback hell. All promise based.
+* No callback hell. All promise/async based.
 
 # In the future
 

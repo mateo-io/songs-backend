@@ -4,9 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
     language: DataTypes.STRING,
     fetchedFrom: DataTypes.STRING
-  }, {});
-  Lyrics.associate = function(models) {
-    // associations can be defined here
+  });
+
+
+  Lyrics.associate = (models) => {
+    Lyrics.belongsTo(models.Song, {
+      foreignKey: "songId",
+      targetKey: "id",
+      // as: "songId",
+      onDelete: "cascade",
+      hooks: true
+    });
   };
   return Lyrics;
 };

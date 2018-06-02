@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 
-const getLyricsUrl = async page => {
+const getLyricsUrlEnglish = async page => {
   // selectors
   const FIRST_LINK_SELECTOR0 = `body > div.container.main-page > div > div > div > table > tbody > tr > td > a`;
   const FIRST_LINK_SELECTOR1 = `body > div.container.main-page > div > div > div > table > tbody > tr:nth-child(2) > td > a`;
@@ -35,8 +35,8 @@ const getLyricsUrl = async page => {
   return lyricsUrls.filter(arr => arr.length > 0);
 };
 
-async function runScraper(query, language) {
-  console.log(`runScraper starts with query:${query} and language ${language}`);
+async function runScraperEnglish(query) {
+  console.log(`runScraper starts with query:${query} and language english`);
   if (!query || !language) {
     // if any are are empty then do nothing
     return;
@@ -71,15 +71,31 @@ async function runScraper(query, language) {
   return lyrics;
 }
 
+const runScraper = (query, language) => {
+  switch (language) {
+    case 'english':
+      return runScraperEnglish(query)
+    default:
+      // TODO -> don't run any scraper and tell user to fuck offf
+      return runScraperEnglish(query)
+  }
+}
+
 module.exports = {
   run(req, res) {
-    const { query, language } = req.body;
+    const {
+      query,
+      language
+    } = req.body;
     return runScraper(query, language)
       .then(lyrics =>
         res.status(201).send({
           payload: lyrics
         })
       )
-      .catch(error => res.status(400).send({ status: "400", message: error }));
+      .catch(error => res.status(400).send({
+        status: "400",
+        message: error
+      }));
   }
 };

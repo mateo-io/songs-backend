@@ -11,6 +11,7 @@ module.exports = function (sequelize, DataTypes) {
   Artist.associate = (models) => {
     Artist.hasMany(models.Song, {
       foreignKey: "artistId",
+      as: "songs",
       onDelete: "cascade",
       hooks: true
     });

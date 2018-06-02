@@ -47,6 +47,36 @@ app.use(cors());
 // Require our routes into the application.
 require("./routes")(app);
 
+/* graphql */
+var graphqlHTTP = require('express-graphql');
+var { buildSchema } = require('graphql');
+
+// Construct a schema, using GraphQL schema language
+var schema = buildSchema(`
+  type Query {
+    allArtists: [Artist!]
+  }
+  type Artist {
+    name: String
+  }
+`);
+
+// The root provides a resolver function for each API endpoint
+var root = {
+  allArtists: () => {
+    return [{name:'Ray'}, {name:'dude'}];
+  },
+  artist: () => {
+    return [{name:'Ray'}]
+  }
+};
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true,
+}));
+/* graphql END*/
+
 app.get("*", (req, res) =>
   res.status(200).send({
     message: "Welcome to the beginning of nothingness."
