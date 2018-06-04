@@ -6,6 +6,9 @@ const {
 const {
   compose
 } = require("compose-middleware");
+const {
+  runScraper
+} = require("./scrape.js")
 
 module.exports = {
   create(req, res) {
@@ -53,6 +56,7 @@ module.exports = {
       .then(artistArray => {
         // if no songs -> create song
         const artist = artistArray[0]
+        console.log(`Artist found or created ${artist}`)
         const {
           songs,
           id

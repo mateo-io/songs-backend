@@ -1,14 +1,11 @@
-const controllers = require("../controllers")
-
-const user = controllers.user;
-
-// core
-const artist = controllers.artist;
-const songs = controllers.songs;
-const lyrics = controllers.lyrics
-
-// extra
-const scrape = controllers.scrape;
+const {
+  artist,
+  songs,
+  lyrics,
+  user,
+  scrape,
+  translate
+} = require("../controllers")
 // const twitter = controllers.twitter;
 
 module.exports = app => {
@@ -35,6 +32,9 @@ module.exports = app => {
   app.post("/api/lyrics", lyrics.create);
   app.get("/api/lyrics", lyrics.list);
   app.post("/api/lyrics-fetch", lyrics.find)
+
+  // TRANSLATE
+  app.post("/api/translate", translate.translateText)
 
   // SCRAPER
   app.post("/api/scrape", scrape.run);

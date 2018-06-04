@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 
 const getLyricsUrlEnglish = async page => {
   // selectors
+  // TODO convert to enum
   const FIRST_LINK_SELECTOR0 = `body > div.container.main-page > div > div > div > table > tbody > tr > td > a`;
   const FIRST_LINK_SELECTOR1 = `body > div.container.main-page > div > div > div > table > tbody > tr:nth-child(2) > td > a`;
   const FIRST_LINK_SELECTOR2 = `body > div.container.main-page > div > div > div > table > tbody > tr:nth-child(1) > td > a`;
@@ -37,7 +38,8 @@ const getLyricsUrlEnglish = async page => {
 
 async function runScraperEnglish(query) {
   console.log(`runScraper starts with query:${query} and language english`);
-  if (!query || !language) {
+  if (!query) {
+    console.log(`breaking`)
     // if any are are empty then do nothing
     return;
   }
@@ -51,9 +53,10 @@ async function runScraperEnglish(query) {
   // azlyrics searches like this master+of+puppets
   const formattedQuery = query.split(" ").join("+");
   // search
+
   await page.goto(`https://search.azlyrics.com/search.php?q=${formattedQuery}`);
 
-  const foundLyricsUrl = await getLyricsUrl(page);
+  const foundLyricsUrl = await getLyricsUrlEnglish(page);
   console.log(`foundLyrics!!! ${foundLyricsUrl}`);
 
   await page.goto(foundLyricsUrl[0]);
@@ -68,7 +71,10 @@ async function runScraperEnglish(query) {
   console.log(`lyrics content is ${lyrics}`);
 
   browser.close();
-  return lyrics;
+  return {
+    lyrics,
+    fetchedFrom: 'azlyrics'
+  };
 }
 
 const runScraper = (query, language) => {
@@ -88,9 +94,11 @@ module.exports = {
       language
     } = req.body;
     return runScraper(query, language)
-      .then(lyrics =>
+      .then(payload =>
         res.status(201).send({
-          payload: lyrics
+          lyrics: payload.lyrics,
+          language: language,
+          fetchedFrom: payload.fetchedFrom
         })
       )
       .catch(error => res.status(400).send({
